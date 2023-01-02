@@ -1,14 +1,14 @@
 from utils.hebb import *
 
 class Layer:
-    t:str              # type {input `i`, output `o`}
-    n: int             # number of nodes on layer
-    ni: int            # number of inputs (1 if input)
-    no: int            # number of outputs (1 if output)
-    _xprime:np.ndarray # altered x values used for training
-    _w: np.ndarray     # weight vector per node
-    _dw: np.ndarray    # weight update vector (of same dimensions)
-    _y: np.ndarray     # output
+    t:str           # type {input `i`, output `o`}
+    n: int          # number of nodes on layer
+    ni: int         # number of inputs (1 if input)
+    no: int         # number of outputs (1 if output)
+    _d:np.ndarray   # dw(i,j) = eta(y(j)*x(i) - y(j)*d(j,i)) for every neuron j, and weight w(j,i)
+    _w: np.ndarray  # weight vector per node
+    _dw: np.ndarray # weight update vector (of same dimensions)
+    _y: np.ndarray  # output
 
 
     def __init__(
@@ -24,21 +24,21 @@ class Layer:
         if t == 'o':
             self._w = np.zeros(dtype=np.float32, shape=(n, ni))
             self._dw = np.zeros(dtype=np.float32, shape=(n, ni))
-            self._xprime = np.zeros(dtype=np.float32, shape=(n, ni))
+            self._d = np.zeros(dtype=np.float32, shape=(n, ni))
             for i in range(n):
                 rng = np.random.default_rng()
-                self._w[i] = rng.normal(loc=mu, scale=stddev, size=ni)
+                self._w[i, :] = rng.normal(loc=mu, scale=stddev, size=ni)
 
 
     def get_y(self, x):
         if self.t == 'i':
             return x
-        return np.dot(self._w, x.T)
+        return np.dot(self._w, x)
 
 
-    def set_xprime(self, x):
-        for i in range(self.n):
-            self._xprime[i] = x_to_xprime(self._w, x, self._y, i)
+    def set_d(self):
+        for j in range(self.n):
+            self._d[j, :] = np.dot(self._w[:j, :].T, self._y[:j])
 
 
     @property
@@ -63,8 +63,8 @@ class Layer:
         self._y = y
 
     @property
-    def xprime(self):
-        return self._xprime
-    @xprime.setter
-    def xprime(self, xprime):
-        self._xprime = xprime
+    def d(self):
+        return self._d
+    @d.setter
+    def d(self, d):
+        self._d = d

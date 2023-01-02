@@ -2,6 +2,8 @@ from typing import List
 from layer import *
 
 
+ind = -1
+
 class Model:
     nlayers: int      # number of layers
     layers:np.ndarray # Layer class instances
@@ -27,17 +29,17 @@ class Model:
         ol = self.layers[1]
         epoch = 0
         while epoch < 10:
+            xsshuf = np.random.permutation(xs)
             print(f"\n ** Epoch : {epoch}\n")
             for p in range(nsamples):
-                x = xs[p]
+                x = xsshuf[p]
                 self.set_ys(x)
-                ol.set_xprime(x)
+                ol.set_d()
                 for j in range(self.no):
-                    # ol.xprime[j] = x_to_xprime(ol.w, x, ol.y, j)
-                    ol.dw[j] = self.eta * (ol.y[j] * x - ol.y[j] * ol.xprime[j])
+                    ol.dw[j] = self.eta * ol.y[j] * (x - ol.d[j, :])
                     ol.w[j] += ol.dw[j]
             epoch += 1
-            print(ol.w[5])
+            print(ol.w[1])
 
     def set_ys(self, x):
         self.layers[0].y = self.layers[0].get_y(x)
