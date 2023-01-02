@@ -38,7 +38,7 @@ class Layer:
 
     def set_d(self):
         for j in range(self.n):
-            self._d[j, :] = np.dot(self._w[:j, :].T, self._y[:j])
+            self._d[j, :] = np.dot(self._w[:j+1, :].T, self._y[:j+1])
 
 
     @property
