@@ -1,5 +1,4 @@
 import numpy as np
-
 from sklearn.preprocessing import LabelEncoder, normalize
 from typing import List
 
