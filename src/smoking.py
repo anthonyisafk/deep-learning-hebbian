@@ -16,19 +16,24 @@ School of Informatics
 import pandas as pd
 from model import *
 from utils.preprocessing import *
-from constants import eta, ncomps
+from utils.parsers import HebbianParser
+from utils.loggers import log_hebbian
+
 
 if __name__ == '__main__':
     filename = "smoking/smoking.csv"
     df = pd.read_csv(filename, delimiter=',', header=0)
     nrows, ncols = np.shape(df)
 
+    parser = HebbianParser()
+    args = parser.parse_args()
+    eta = args.eta
+    ncomps = args.nc
+
     df, X = get_features(df, 'smoking', ['gender', 'oral', 'tartar'], ['ID'])
-    org_var = np.sum(np.diag(np.cov(X, rowvar=False)))
     hebb = Model([ncols-2, ncomps], eta)
     hebb.fit(X)
 
-    C = np.cov(hebb.comps, rowvar=False)
-    print(C, end="\n\n")
-    C = C / org_var
-    print(np.diag(C))
+    exp_variance = get_explained_variance(hebb.comps, X)
+    print(f" >>> Explained variance ratio : {exp_variance:.3f}")
+    log_hebbian("results/smoking_hebbian.csv", ncomps, eta, hebb.epochs, hebb.ttime, exp_variance * 100)
