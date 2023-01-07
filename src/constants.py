@@ -1,11 +1,8 @@
 '''
- ** Project-wide set of constants.
+ Project-wide set of constants.
 '''
 
 # Hebbian learning model fitting.
-MAX_EPOCHS = 100
+MAX_LAYERS = 2
+MAX_EPOCHS = 150
 TOLERANCE_PER_OUT_NODE = 1e-7
-
-# `smoking` dataset example.
-eta = 0.001
-ncomps = 5
