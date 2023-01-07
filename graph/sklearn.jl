@@ -3,8 +3,6 @@ using Plots
 
 filename = "results/smoking_pca.csv";
 df = DataFrame(CSV.File(filename, header=1));
-nrows, ncols = size(df)
-
 
 ptimes = plot(
     df[!, :nc], df[!, :time],
@@ -12,7 +10,7 @@ ptimes = plot(
     xlabel = "Number of components",
     ylabel = "Time [sec.]",
     legend = false
-)
+);
 
 pvars = plot(
     df[!, :nc], df[!, :var],
@@ -20,7 +18,7 @@ pvars = plot(
     xlabel = "Number of components",
     ylabel = "Ratio [%]",
     legend = false
-)
+);
 
-savefig(ptimes, "image/sklearn/sklearn_times.png")
-savefig(pvars, "image/sklearn/sklearn_vars.png")
+savefig(ptimes, "image/sklearn/sklearn_times.png");
+savefig(pvars, "image/sklearn/sklearn_vars.png");
