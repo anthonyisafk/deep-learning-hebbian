@@ -3,6 +3,9 @@
         Testing on the `body signals of smoking` dataset:
 @instructions: You can change the number of components
                and other parameters in the `constants.py` file.
+               Even better, try the command line options:
+                 - `-eta` learning rate
+                 - `-nc` number of components
 ****************************************
 https://www.kaggle.com/datasets/kukuroo3/body-signal-of-smoking
 ****************************************
